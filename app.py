@@ -49,8 +49,8 @@ def start():
     return f"Hey, I am Running !! {socket.gethostname()} "
 
 @app.post("/medical_bot")
-def chat_bot(input:str):
-    chain_input={"input":input}
+async def chat_bot(input:dict):
+    chain_input={"input":input.get("text")}
     response=final_chain.invoke(chain_input)
     return response["answer"]
 
