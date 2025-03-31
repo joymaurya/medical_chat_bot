@@ -5,9 +5,13 @@ from langchain_pinecone import PineconeVectorStore
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 from src.helper import download_hugging_face_embeddings
+import socket
+import uvicorn
 from dotenv import load_dotenv
 import os
 from fastapi import FastAPI
+
+app=FastAPI()
 
 load_dotenv()
 
@@ -36,8 +40,20 @@ prompt=ChatPromptTemplate.from_messages(
 
 qna_chain=create_stuff_documents_chain(llm=model,prompt=prompt)
 final_chain=create_retrieval_chain(retriver,qna_chain)
-input={"input":"What is Acne?"}
 
-response=final_chain.invoke(input)
 
-print(response["answer"])
+
+
+@app.get("/")
+def start():
+    return f"Hey, I am Running !! {socket.gethostname()} "
+
+@app.post("/medical_bot")
+def chat_bot(input:str):
+    chain_input={"input":input}
+    response=final_chain.invoke(chain_input)
+    return response["answer"]
+
+
+if __name__=="__main__":
+    uvicorn.run(app="app:app",host="0.0.0.0",port=5000,reload=True)

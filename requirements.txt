@@ -10,4 +10,5 @@ langchain-groq
 langchain_experimental
 langchain_huggingface
 fastapi
+uvicorn
 -e .
