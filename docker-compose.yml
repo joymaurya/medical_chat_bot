@@ -1,0 +1,8 @@
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - "60000:5000"
+    volumes:
+      - ./.env:/app/.env:ro
